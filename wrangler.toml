@@ -1,0 +1,13 @@
+name = "myblog"
+compatibility_date = "2025-06-12"
+
+[assets]
+directory = "./public"
+
+[build]
+command = "hugo"
+
+routes = [
+  { pattern = "curtisjewell.website", custom_domain = true },
+  { pattern = "www.curtisjewell.website", custom_domain = true }
+]
