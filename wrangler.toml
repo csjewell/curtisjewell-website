@@ -1,5 +1,5 @@
-name = "myblog"
-compatibility_date = "2025-06-12"
+name = "curtisjewell-website"
+compatibility_date = "2025-07-06"
 
 [assets]
 directory = "./public"
