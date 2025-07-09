@@ -1,0 +1,2 @@
+{{- /* Adds 4 spaces */ -}}
+{{ printf "\n%s" . | chomp | replaceRE `\n` "\n    " | safeHTML }}

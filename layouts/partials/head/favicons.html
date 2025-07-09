@@ -1,0 +1,21 @@
+  <link rel="icon" href="{{ .favicon | default "favicon.ico" | absURL }}">
+  {{- with .favicon16x16 }} 
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ . | absURL }}">
+  {{- end }}
+  {{- with .favicon32x32 }} 
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ . | absURL }}">
+  {{- end }}
+  {{- with .favicon64x64 }} 
+  <link rel="icon" type="image/png" sizes="64x64" href="{{ . | absURL }}">
+  {{- end }}
+  {{- with .favicon96x96 }}
+  <link rel="icon" type="image/png" sizes="96x96" href="{{ . | absURL }}">
+  {{- end }}
+  {{- with .apple_touch_icon }}
+  <link rel="apple-touch-icon" href="{{ . | absURL }}">
+  {{- end }}
+  {{- with .safari_pinned_tab }}
+  <link rel="mask-icon" href="{{ . | absURL }}">
+  {{- end }}
+  <meta name="theme-color" content="{{ .theme_color | default "#2e2e33" }}">
+  <meta name="msapplication-TileColor" content="{{ .msapplication_TileColor | default "#2e2e33" }}">

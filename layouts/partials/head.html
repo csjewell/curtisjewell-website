@@ -1,0 +1,78 @@
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{{- if hugo.IsProduction | or (eq site.Params.env "production") | and (ne .Params.robotsNoIndex true) }}
+  <meta name="robots" content="index, follow">
+{{- else }}
+  <meta name="robots" content="noindex, nofollow">
+{{- end }}
+
+{{- /* Meta */}}
+{{- if .IsHome }}
+  {{- with site.Params.keywords }}
+  <meta name="keywords" content="{{- range $i, $e := . }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}">
+  {{- end }}
+{{- else }}
+  <meta name="keywords" content="{{ if .Params.keywords -}}
+    {{- range $i, $e := .Params.keywords }}{{ if $i }}, {{ end }}{{ $e }}{{ end }} {{- else }}
+    {{- range $i, $e := .Params.tags }}{{ if $i }}, {{ end }}{{ $e }}{{ end }} {{- end -}}">
+{{- end }}
+  <meta name="description" content="{{- with .Description }}{{ . }}{{- else }}{{- if or .IsPage .IsSection}}
+    {{- .Summary | default (printf "%s - %s" .Title  site.Title) }}{{- else }}
+    {{- with site.Params.description }}{{ . }}{{- end }}{{- end }}{{- end -}}">
+  <meta name="author" content="{{ (partial "author.html" . ) }}">
+{{- if site.Params.analytics.google.SiteVerificationTag }}
+  <meta name="google-site-verification" content="{{ site.Params.analytics.google.SiteVerificationTag }}">
+{{- end }}
+{{- if site.Params.analytics.yandex.SiteVerificationTag }}
+  <meta name="yandex-verification" content="{{ site.Params.analytics.yandex.SiteVerificationTag }}">
+{{- end }}
+{{- if site.Params.analytics.bing.SiteVerificationTag }}
+  <meta name="msvalidate.01" content="{{ site.Params.analytics.bing.SiteVerificationTag }}">
+{{- end }}
+{{- if site.Params.analytics.naver.SiteVerificationTag }}
+  <meta name="naver-site-verification" content="{{ site.Params.analytics.naver.SiteVerificationTag }}">
+{{- end }}
+  <link rel="canonical" href="{{ if .Params.canonicalURL -}} {{ trim .Params.canonicalURL " " }} {{- else -}} {{ .Permalink }} {{- end }}">
+
+{{- /* Styles */}}
+{{- partial "head/styles.html" . }}
+{{- /* RSS */}}
+{{- range .AlternativeOutputFormats }}
+  <link rel="{{ .Rel }}" type="{{ .MediaType.Type | html }}" href="{{ .Permalink | safeURL }}">
+{{- end }}
+{{- range .AllTranslations }}
+  <link rel="alternate" hreflang="{{ .Lang }}" href="{{ .Permalink }}">
+{{- end }}
+
+{{- /* Search */}}
+{{- if (eq .Layout `search`) }}
+  <link rel="preload" crossorigin="anonymous" href="../index.json" as="fetch">
+  {{- $fastsearch := resources.Get "js/fastsearch.js" | js.Build (dict "params" (dict "fuseOpts" site.Params.fuseOpts)) | resources.Minify }}
+  {{- $fusejs     := resources.Get "js/fuse.basic.min.js" }}
+  {{- $license_js := resources.Get "js/license.js" }}
+  {{- if not site.Params.assets.disableFingerprinting }}
+    {{- $search := (slice $fusejs $license_js $fastsearch ) | resources.Concat "assets/js/search.js" | fingerprint }}
+  <script defer crossorigin="anonymous" src="{{ $search.RelPermalink }}" integrity="{{ $search.Data.Integrity }}"></script>
+  {{- else }}
+    {{- $search := (slice $fusejs $fastsearch ) | resources.Concat "assets/js/search.js" }}
+  <script defer crossorigin="anonymous" src="{{ $search.RelPermalink }}"></script>
+  {{- end }}
+{{- end }}
+
+{{- /* Favicons */}}
+{{ partial "head/favicons.html" site.Params.assets -}}
+{{ partial "extend_head.html" . -}}
+
+{{- /* Misc */}}
+{{- if hugo.IsProduction | or (eq site.Params.env "production") }}
+  {{- partial "head/opengraph.html" . }}
+  {{- partial "head/twitter_cards.html" . }}
+{{- end -}}
+
+{{- /* Title */}}
+  <title>{{ if .IsHome }}{{ else }}{{ if .Title }}{{ .Title }} | {{ end }}{{ end }}{{ site.Title }}</title>
+{{- if hugo.IsProduction | or (eq site.Params.env "production") }}
+  {{- partial "head/schema_json.html" . }}
+{{- end }}
+{{ partial "head/noscript.html" site.Params.defaultTheme -}}

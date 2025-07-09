@@ -1,0 +1,2 @@
+{{- /* Adds 4 spaces */ -}}
+{{ printf "    %s" . | replaceRE `\n` "\n    " | safeHTML }}
